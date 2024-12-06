@@ -1,26 +1,46 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <script src="/uv/uv.bundle.js"></script>
-        <script src="/uv/uv.config.js"></script>
+<head>
+    <script src="/uv/uv.bundle.js"></script>
+    <script src="/uv/uv.config.js"></script>
 
-        <script>
-        if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-                navigator.serviceWorker.register("/uv/sw.js", {
-                    scope: __uv$config.prefix,
-                });
+    <script>
+    if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+            navigator.serviceWorker.register("/uv/sw.js", {
+                scope: __uv$config.prefix,
             });
-        }
-        </script>
+        });
+    }
+    </script>
 
-        <link rel="stylesheet" href="example.css">
-    </head>
-    <body>
-        <input type="text" id="urlInput" placeholder="Enter URL here">
-        <button id="searchButton">Search Text</button>
+    <link rel="stylesheet" href="example.css">
+</head>
+<body>
+    <input type="text" id="urlInput" placeholder="Enter URL here">
+    <iframe id="iframeWindow" class="iframeWindow"></iframe>
+</body>
+<script src="example.js"></script>
+<script>
+    const urlInput = document.getElementById("urlInput");
+    let inactivityTimer;
 
-        <iframe id="iframeWindow" class="iframeWindow"></iframe>
-    </body>
-    <script src="example.js"></script>
+    const reduceOpacity = () => {
+        urlInput.style.opacity = "0.25";
+    };
+
+    const resetOpacity = () => {
+        urlInput.style.opacity = "1";
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(reduceOpacity, 3000);
+    };
+
+    urlInput.addEventListener("focus", resetOpacity);
+    urlInput.addEventListener("input", resetOpacity);
+    urlInput.addEventListener("blur", reduceOpacity);
+
+    window.addEventListener("load", () => {
+        inactivityTimer = setTimeout(reduceOpacity, 3000);
+    });
+</script>
 </html>
